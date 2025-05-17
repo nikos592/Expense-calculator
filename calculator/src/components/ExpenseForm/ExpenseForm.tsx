@@ -1,4 +1,3 @@
-import React from 'react';
 import { useExpenseForm } from '../../hooks/useExpenseForm';
 import Button from '../UI/Button/Button';
 import Select from '../UI/Select/Select';

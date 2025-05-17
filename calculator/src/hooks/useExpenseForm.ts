@@ -1,18 +1,18 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { ExpenseContext } from '../contexts/ExpenseContext';
 import { categories } from '../utils/categories';
 import { formatDate } from '../utils/dateUtils';
 import { ExpenseFormData, CategoryOption } from '../types/expense';
 
 export const useExpenseForm = () => {
-  // Состояние формы с начальными значениями
+  const { addExpense } = useContext(ExpenseContext);
   const [formData, setFormData] = useState<ExpenseFormData>({
     description: '',
     amount: '',
     category: '',
-    date: formatDate(new Date()), // Текущая дата в формате YYYY-MM-DD
+    date: formatDate(new Date()),
   });
 
-  // Обработчик изменений для всех полей ввода
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -20,36 +20,46 @@ export const useExpenseForm = () => {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
-  // Обработчик отправки формы
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Валидация данных
-    if (!formData.description || !formData.amount || !formData.category) {
-      alert('Пожалуйста, заполните все обязательные поля');
+    // Валидация
+    if (!formData.description.trim()) {
+      alert('Введите описание затраты');
       return;
     }
 
-    // Подготовка данных для отправки
+    const amountValue = parseFloat(formData.amount);
+    if (isNaN(amountValue) || amountValue <= 0) {
+      alert('Введите корректную сумму (больше 0)');
+      return;
+    }
+
+    if (!formData.category) {
+      alert('Выберите категорию');
+      return;
+    }
+
+    // Подготовка данных
     const expenseData = {
-      ...formData,
-      amount: parseFloat(formData.amount), // Конвертация строки в число
-      date: formData.date || formatDate(new Date()), // Дата по умолчанию
+      description: formData.description.trim(),
+      amount: amountValue,
+      category: formData.category,
+      date: formData.date || formatDate(new Date()),
     };
 
-    // Здесь будет логика отправки данных (например, в API или контекст)
-    console.log('Данные для отправки:', expenseData);
+    // Добавление в контекст
+    addExpense(expenseData);
 
-    // Можно добавить сброс формы после отправки
-    // setFormData({
-    //   description: '',
-    //   amount: '',
-    //   category: '',
-    //   date: formatDate(new Date()),
-    // });
+    // Сброс формы
+    setFormData({
+      description: '',
+      amount: '',
+      category: '',
+      date: formatDate(new Date()),
+    });
   };
 
-  // Возвращаем все необходимые данные и функции
   return {
     ...formData,
     categories: categories as CategoryOption[],
