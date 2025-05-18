@@ -19,7 +19,6 @@
   overflow: hidden;
 }
 
-/* Шапка "таблицы" (grid) */
 .expenseHeader {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr 0.5fr;
@@ -30,7 +29,6 @@
   border-bottom: 2px solid #e0e0e0;
 }
 
-/* Строка с данными (grid) */
 .expenseRow {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr 0.5fr;
@@ -43,12 +41,20 @@
   border-bottom: none;
 }
 
-/* Итоговая строка (flex) */
-.total {
+.totalRow {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 12px 16px;
   background-color: #f9f9f9;
+  font-weight: bold;
+  border-top: 1px solid #e0e0e0;
+}
+
+.total {
+  display: flex;
+  gap: 8px;
+  align-items: center;
   font-weight: bold;
 }
 
@@ -56,7 +62,6 @@
   color: #333;
 }
 
-/* Пустой список */
 .emptyState {
   padding: 20px;
   text-align: center;
@@ -64,12 +69,62 @@
   font-style: italic;
 }
 
-/* Кнопка удаления */
-.deleteButton {
-  background: none;
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.pagination button {
+  padding: 6px 12px;
   border: none;
+  background: #f5f5f5;
+  color: #333;
+  border-radius: 4px;
   cursor: pointer;
-  color: #ff4444;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination button:hover,
+.pagination .activePage {
+  background: #1976d2;
+  color: #fff;
+}
+
+.activePage {
+  background: #1976d2;
+  color: #fff;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0;
+}
+
+.controls {
+  display: flex;
+  gap: 12px;
+}
+
+.sortSelect,
+.filterSelect {
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
   font-size: 1rem;
-  padding: 0;
 }
