@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Select.module.css';
+import styles from '../../../styles/Select.module.css';
 import { CategoryOption } from '../../../types/expense';
 
 interface SelectProps {
@@ -19,7 +19,9 @@ const Select: React.FC<SelectProps> = ({
 }) => {
   return (
     <select id={id} className={styles.select} value={value} onChange={onChange}>
-      <option value="">{defaultLabel}</option>
+      <option value="" disabled hidden>
+        {defaultLabel}
+      </option>
       {options.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}

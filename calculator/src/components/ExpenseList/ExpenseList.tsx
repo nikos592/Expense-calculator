@@ -1,13 +1,15 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useMemo } from 'react';
 import { ExpenseContext } from '../../contexts/ExpenseContext';
-import styles from './ExpenseList.module.css';
+import styles from '../../styles/ExpenseList.module.css';
 import { categories } from '../../utils/categories';
 import Select from '../UI/Select/Select';
 import Pagination from './Pagination';
+import ExpenseRow from '../ExpenseList/ExpenseRow';
 import {
   getSortedExpenses,
   getFilteredExpenses,
 } from '../../utils/expenseUtils';
+import { formatCurrency } from '../../utils/currencyUtils';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -22,8 +24,15 @@ const ExpenseList: React.FC = () => {
   const [sort, setSort] = useState<'date' | 'amount'>('date');
   const [categoryFilter, setCategoryFilter] = useState<string>('');
 
-  const sortedExpenses = getSortedExpenses(expenses, sort);
-  const filteredExpenses = getFilteredExpenses(sortedExpenses, categoryFilter);
+  const sortedExpenses = useMemo(
+    () => getSortedExpenses(expenses, sort),
+    [expenses, sort]
+  );
+
+  const filteredExpenses = useMemo(
+    () => getFilteredExpenses(sortedExpenses, categoryFilter),
+    [sortedExpenses, categoryFilter]
+  );
 
   const totalPages = Math.ceil(filteredExpenses.length / ITEMS_PER_PAGE);
   const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -33,9 +42,7 @@ const ExpenseList: React.FC = () => {
   );
 
   const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
+    if (page >= 1 && page <= totalPages) setCurrentPage(page);
   };
 
   return (
@@ -59,65 +66,42 @@ const ExpenseList: React.FC = () => {
           />
         </div>
       </div>
-      <div className={styles.expenseList}>
-        <div className={styles.listContainer}>
-          {filteredExpenses.length > 0 ? (
-            <>
-              {/* Шапка */}
-              <div className={styles.expenseHeader}>
-                <span>Описание</span>
-                <span>Сумма</span>
-                <span>Категория</span>
-                <span>Дата</span>
-                <span>Действия</span>
+      <div className={styles.listContainer}>
+        {filteredExpenses.length > 0 ? (
+          <>
+            <div className={styles.expenseHeader}>
+              <span>Описание</span>
+              <span>Сумма</span>
+              <span>Категория</span>
+              <span>Дата</span>
+              <span>Действия</span>
+            </div>
+            {currentExpenses.map((expense) => (
+              <ExpenseRow
+                key={expense.id}
+                expense={expense}
+                onDelete={deleteExpense}
+              />
+            ))}
+            <div className={styles.totalRow}>
+              <div className={styles.total}>
+                <span>Итого:</span>
+                <span className={styles.totalAmount}>
+                  {formatCurrency(totalAmount)}
+                </span>
               </div>
-
-              {/* Строки с данными */}
-              {currentExpenses.map((expense) => (
-                <div key={expense.id} className={styles.expenseRow}>
-                  <span>{expense.description}</span>
-                  <span>{expense.amount.toLocaleString('ru-RU')} ₽</span>
-                  <span>
-                    {categories.find((c) => c.value === expense.category)
-                      ?.label || expense.category}
-                  </span>
-                  <span>
-                    {new Date(expense.date).toLocaleDateString('ru-RU')}
-                  </span>
-                  <span
-                    className={styles.deleteButton}
-                    onClick={() => deleteExpense(expense.id!)}
-                  >
-                    <img
-                      src={require('../../icons/trash.png')}
-                      alt="Кнопка удалить"
-                      width="20px"
-                      height="20px"
-                    />
-                  </span>
-                </div>
-              ))}
-
-              <div className={styles.totalRow}>
-                <div className={styles.total}>
-                  <span>Итого:</span>
-                  <span className={styles.totalAmount}>
-                    {totalAmount.toLocaleString('ru-RU')} ₽
-                  </span>
-                </div>
-                {totalPages > 1 && (
-                  <Pagination
-                    totalPages={totalPages}
-                    currentPage={currentPage}
-                    onPageChange={handlePageChange}
-                  />
-                )}
-              </div>
-            </>
-          ) : (
-            <div className={styles.emptyState}>Нет добавленных затрат</div>
-          )}
-        </div>
+              {totalPages > 1 && (
+                <Pagination
+                  totalPages={totalPages}
+                  currentPage={currentPage}
+                  onPageChange={handlePageChange}
+                />
+              )}
+            </div>
+          </>
+        ) : (
+          <div className={styles.emptyState}>Нет добавленных затрат</div>
+        )}
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './ExpenseList.module.css';
+import styles from '../../styles/ExpenseList.module.css';
 
 interface Props {
   totalPages: number;

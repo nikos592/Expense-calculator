@@ -1,7 +1,7 @@
 import { useExpenseForm } from '../../hooks/useExpenseForm';
 import Button from '../UI/Button/Button';
 import Select from '../UI/Select/Select';
-import styles from './ExpenseForm.module.css';
+import styles from '../../styles/ExpenseForm.module.css';
 
 const ExpenseForm: React.FC = () => {
   const {
@@ -10,6 +10,7 @@ const ExpenseForm: React.FC = () => {
     category,
     date,
     categories,
+    errors,
     handleSubmit,
     handleChange,
   } = useExpenseForm();
@@ -25,17 +26,25 @@ const ExpenseForm: React.FC = () => {
           id="description"
           value={description}
           onChange={handleChange}
+          className={errors.description ? styles.errorInput : ''}
         />
+        {errors.description && (
+          <span className={styles.errorMessage}>{errors.description}</span>
+        )}
       </div>
 
       <div className={styles.formGroup}>
-        <label htmlFor="amount">Сумма (Р)</label>
+        <label htmlFor="amount">Сумма (₽)</label>
         <input
           type="number"
           id="amount"
           value={amount}
           onChange={handleChange}
+          className={errors.amount ? styles.errorInput : ''}
         />
+        {errors.amount && (
+          <span className={styles.errorMessage}>{errors.amount}</span>
+        )}
       </div>
 
       <div className={styles.formGroup}>

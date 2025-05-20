@@ -12,27 +12,41 @@ export const useExpenseForm = () => {
     category: '',
     date: formatDate(new Date()),
   });
+  const [errors, setErrors] = useState<{
+    description?: string;
+    amount?: string;
+  }>({});
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
+
+    if (id === 'description' && value.trim()) {
+      setErrors((prev) => ({ ...prev, description: undefined }));
+    }
+    if (id === 'amount' && value.trim()) {
+      setErrors((prev) => ({ ...prev, amount: undefined }));
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Валидация
+    const newErrors: typeof errors = {};
+
     if (!formData.description.trim()) {
-      alert('Введите описание затраты');
-      return;
+      newErrors.description = 'Это поле обязательно для заполнения';
     }
 
     const amountValue = parseFloat(formData.amount);
-    if (isNaN(amountValue) || amountValue <= 0) {
-      alert('Введите корректную сумму (больше 0)');
-      return;
+    if (!formData.amount.trim()) {
+      newErrors.amount = 'Введите сумму';
+    } else if (isNaN(amountValue)) {
+      newErrors.amount = 'Введите корректное число';
+    } else if (amountValue <= 0) {
+      newErrors.amount = 'Сумма должна быть больше 0';
     }
 
     if (!formData.category) {
@@ -40,7 +54,11 @@ export const useExpenseForm = () => {
       return;
     }
 
-    // Подготовка данных
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
     const expenseData = {
       description: formData.description.trim(),
       amount: amountValue,
@@ -48,21 +66,21 @@ export const useExpenseForm = () => {
       date: formData.date || formatDate(new Date()),
     };
 
-    // Добавление в контекст
     addExpense(expenseData);
 
-    // Сброс формы
     setFormData({
       description: '',
       amount: '',
       category: '',
       date: formatDate(new Date()),
     });
+    setErrors({});
   };
 
   return {
     ...formData,
     categories: categories as CategoryOption[],
+    errors,
     handleChange,
     handleSubmit,
   };

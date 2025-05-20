@@ -7,7 +7,6 @@ function App() {
   return (
     <ExpenseProvider>
       <div className="App">
-        <h1>Калькулятор затрат</h1>
         <ExpenseForm />
         <ExpenseList />
       </div>
