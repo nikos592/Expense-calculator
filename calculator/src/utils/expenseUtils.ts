@@ -2,13 +2,20 @@ import { Expense } from '../types/expense';
 
 export function getSortedExpenses(
   expenses: Expense[],
-  sort: 'date' | 'amount'
+  sort: 'date_desc' | 'date_asc' | 'amount_desc' | 'amount_asc'
 ) {
   return [...expenses].sort((a, b) => {
-    if (sort === 'date') {
-      return new Date(b.date).getTime() - new Date(a.date).getTime();
-    } else {
-      return b.amount - a.amount;
+    switch (sort) {
+      case 'date_desc':
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      case 'date_asc':
+        return new Date(a.date).getTime() - new Date(b.date).getTime();
+      case 'amount_desc':
+        return b.amount - a.amount;
+      case 'amount_asc':
+        return a.amount - b.amount;
+      default:
+        return 0;
     }
   });
 }

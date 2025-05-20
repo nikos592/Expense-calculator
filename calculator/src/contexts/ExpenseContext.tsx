@@ -1,4 +1,4 @@
-import { createContext, useState, ReactNode } from 'react';
+import { createContext, useState, ReactNode, useEffect } from 'react';
 import { Expense } from '../types/expense';
 
 type ExpenseContextType = {
@@ -8,6 +8,8 @@ type ExpenseContextType = {
   totalAmount: number;
 };
 
+const STORAGE_KEY = 'expenses';
+
 export const ExpenseContext = createContext<ExpenseContextType>({
   expenses: [],
   addExpense: () => {},
@@ -16,7 +18,14 @@ export const ExpenseContext = createContext<ExpenseContextType>({
 });
 
 export const ExpenseProvider = ({ children }: { children: ReactNode }) => {
-  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [expenses, setExpenses] = useState<Expense[]>(() => {
+    const savedExpenses = localStorage.getItem(STORAGE_KEY);
+    return savedExpenses ? JSON.parse(savedExpenses) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
+  }, [expenses]);
 
   const addExpense = (expense: Omit<Expense, 'id'>) => {
     setExpenses((prev) => [

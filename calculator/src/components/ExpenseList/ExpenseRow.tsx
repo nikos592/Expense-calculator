@@ -1,7 +1,7 @@
 import React from 'react';
 import { Expense } from '../../types/expense';
 import styles from '../../styles/ExpenseList.module.css';
-import trash from '../../icons/trash.png';
+import trash from '../../icons/trash.svg';
 import { formatDate, parseDateString } from '../../utils/dateUtils';
 import { getCategoryLabel } from '../../utils/categories';
 import { formatCurrency } from '../../utils/currencyUtils';

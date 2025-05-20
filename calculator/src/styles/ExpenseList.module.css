@@ -125,6 +125,13 @@
 .controls {
   display: flex;
   gap: 12px;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.controls label,
+.controls select {
+  white-space: nowrap;
 }
 
 .sortSelect,

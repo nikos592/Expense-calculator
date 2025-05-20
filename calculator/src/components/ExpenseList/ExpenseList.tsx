@@ -14,14 +14,16 @@ import { formatCurrency } from '../../utils/currencyUtils';
 const ITEMS_PER_PAGE = 6;
 
 const sortOptions = [
-  { value: 'date', label: 'Сортировать по дате' },
-  { value: 'amount', label: 'Сортировать по сумме' },
+  { value: 'date_desc', label: 'По дате (сначала новые)' },
+  { value: 'date_asc', label: 'По дате (сначала старые)' },
+  { value: 'amount_desc', label: 'По сумме (от большего к меньшему)' },
+  { value: 'amount_asc', label: 'По сумме (от меньшего к большему)' },
 ];
 
 const ExpenseList: React.FC = () => {
   const { expenses, deleteExpense, totalAmount } = useContext(ExpenseContext);
   const [currentPage, setCurrentPage] = useState(1);
-  const [sort, setSort] = useState<'date' | 'amount'>('date');
+  const [sort, setSort] = useState<'date_desc' | 'date_asc' | 'amount_desc' | 'amount_asc'>('date_desc');
   const [categoryFilter, setCategoryFilter] = useState<string>('');
 
   const sortedExpenses = useMemo(
@@ -50,13 +52,15 @@ const ExpenseList: React.FC = () => {
       <div className={styles.headerRow}>
         <h2 className={styles.title}>Список затрат</h2>
         <div className={styles.controls}>
+          <label htmlFor="sort" style={{ marginRight: 4 }}>Сортировка:</label>
           <Select
             id="sort"
             value={sort}
-            onChange={(e) => setSort(e.target.value as 'date' | 'amount')}
+            onChange={(e) => setSort(e.target.value as any)}
             options={sortOptions}
             defaultLabel="Сортировка"
           />
+          <label htmlFor="category" style={{ marginLeft: 16, marginRight: 4 }}>Фильтр по категории:</label>
           <Select
             id="category"
             value={categoryFilter}
