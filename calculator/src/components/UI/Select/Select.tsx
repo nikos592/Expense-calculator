@@ -8,6 +8,8 @@ interface SelectProps {
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   options: CategoryOption[];
   defaultLabel: string;
+  className?: string;
+  title?: string;
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -16,9 +18,17 @@ const Select: React.FC<SelectProps> = ({
   onChange,
   options,
   defaultLabel,
+  className,
+  title,
 }) => {
   return (
-    <select id={id} className={styles.select} value={value} onChange={onChange}>
+    <select
+      id={id}
+      className={className ? `${styles.select} ${className}` : styles.select}
+      value={value}
+      onChange={onChange}
+      title={title}
+    >
       <option value="" disabled hidden>
         {defaultLabel}
       </option>

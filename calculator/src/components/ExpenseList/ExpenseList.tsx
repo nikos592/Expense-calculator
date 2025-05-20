@@ -10,15 +10,9 @@ import {
   getFilteredExpenses,
 } from '../../utils/expenseUtils';
 import { formatCurrency } from '../../utils/currencyUtils';
+import { sortOptions } from '../../utils/sortOptions';
 
 const ITEMS_PER_PAGE = 6;
-
-const sortOptions = [
-  { value: 'date_desc', label: 'По дате (сначала новые)' },
-  { value: 'date_asc', label: 'По дате (сначала старые)' },
-  { value: 'amount_desc', label: 'По сумме (от большего к меньшему)' },
-  { value: 'amount_asc', label: 'По сумме (от меньшего к большему)' },
-];
 
 const ExpenseList: React.FC = () => {
   const { expenses, deleteExpense, totalAmount } = useContext(ExpenseContext);

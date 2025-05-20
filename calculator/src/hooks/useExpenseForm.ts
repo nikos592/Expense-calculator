@@ -15,6 +15,8 @@ export const useExpenseForm = () => {
   const [errors, setErrors] = useState<{
     description?: string;
     amount?: string;
+    category?: string;
+    date?: string;
   }>({});
 
   const handleChange = (
@@ -28,6 +30,12 @@ export const useExpenseForm = () => {
     }
     if (id === 'amount' && value.trim()) {
       setErrors((prev) => ({ ...prev, amount: undefined }));
+    }
+    if (id === 'category' && value) {
+      setErrors((prev) => ({ ...prev, category: undefined }));
+    }
+    if (id === 'date' && value) {
+      setErrors((prev) => ({ ...prev, date: undefined }));
     }
   };
 
@@ -50,8 +58,11 @@ export const useExpenseForm = () => {
     }
 
     if (!formData.category) {
-      alert('Выберите категорию');
-      return;
+      newErrors.category = 'Выберите категорию';
+    }
+
+    if (!formData.date) {
+      newErrors.date = 'Выберите дату';
     }
 
     if (Object.keys(newErrors).length > 0) {

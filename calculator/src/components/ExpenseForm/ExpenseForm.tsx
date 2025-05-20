@@ -27,6 +27,7 @@ const ExpenseForm: React.FC = () => {
           value={description}
           onChange={handleChange}
           className={errors.description ? styles.errorInput : ''}
+          title={errors.description || ''}
         />
         {errors.description && (
           <span className={styles.errorMessage}>{errors.description}</span>
@@ -41,6 +42,7 @@ const ExpenseForm: React.FC = () => {
           value={amount}
           onChange={handleChange}
           className={errors.amount ? styles.errorInput : ''}
+          title={errors.amount || ''}
         />
         {errors.amount && (
           <span className={styles.errorMessage}>{errors.amount}</span>
@@ -55,12 +57,27 @@ const ExpenseForm: React.FC = () => {
           onChange={handleChange}
           options={categories}
           defaultLabel="Выберите категорию"
+          className={errors.category ? styles.errorInput : ''}
+          title={errors.category || ''}
         />
+        {errors.category && (
+          <span className={styles.errorMessage}>{errors.category}</span>
+        )}
       </div>
 
       <div className={styles.formGroup}>
         <label htmlFor="date">Дата</label>
-        <input type="date" id="date" value={date} onChange={handleChange} />
+        <input
+          type="date"
+          id="date"
+          value={date}
+          onChange={handleChange}
+          className={errors.date ? styles.errorInput : ''}
+          title={errors.date || ''}
+        />
+        {errors.date && (
+          <span className={styles.errorMessage}>{errors.date}</span>
+        )}
       </div>
 
       <Button type="submit">Добавить затрату</Button>

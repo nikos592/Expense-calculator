@@ -10,6 +10,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr; /* 2 колонки */
   gap: 1.5rem; /* Отступ между ячейками */
+  color: #111;
 }
 
 button {
@@ -19,7 +20,7 @@ button {
 .expenseForm h2 {
   grid-column: span 2;
   margin: 0;
-  color: #2c3e50;
+  color: #111;
   text-align: left;
 }
 
@@ -31,7 +32,7 @@ button {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: #34495e;
+  color: #111;
 }
 
 .formGroup input,
@@ -42,6 +43,7 @@ button {
   border-radius: 4px;
   font-size: 1rem;
   transition: border-color 0.3s;
+  color: #111;
 }
 
 .formGroup input:focus,
@@ -55,7 +57,7 @@ button {
 }
 
 .errorMessage {
-  color: red;
+  color: #d32f2f;
   font-size: 0.8rem;
   margin-top: 0.25rem;
   display: block;
