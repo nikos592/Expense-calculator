@@ -4,6 +4,7 @@
   margin: 0 auto;
   font-family: Arial, sans-serif;
   color: #111;
+  padding: 0 1rem;
 }
 
 .expenseList h2 {
@@ -111,13 +112,15 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .headerRow h2 {
   margin: 0;
   color: #2c3e50;
   text-align: left;
-  padding-left: 35px;
+  padding-left: 0;
 }
 
 .title {
@@ -128,7 +131,7 @@
 .controls {
   display: flex;
   gap: 12px;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-items: center;
 }
 
@@ -143,4 +146,56 @@
   border-radius: 4px;
   border: 1px solid #ccc;
   font-size: 1rem;
+}
+
+/* Медиа-запросы для адаптивности */
+@media screen and (max-width: 1024px) {
+  .expenseHeader,
+  .expenseRow {
+    grid-template-columns: 2fr 1fr 1fr 0.5fr;
+  }
+  
+  .expenseHeader span:nth-child(3),
+  .expenseRow span:nth-child(3) {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .expenseHeader,
+  .expenseRow {
+    grid-template-columns: 2fr 1fr 0.5fr;
+  }
+  
+  .expenseHeader span:nth-child(2),
+  .expenseRow span:nth-child(2) {
+    display: none;
+  }
+  
+  .headerRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .controls {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .expenseHeader,
+  .expenseRow {
+    grid-template-columns: 1fr 0.5fr;
+  }
+  
+  .expenseHeader span:nth-child(1),
+  .expenseRow span:nth-child(1) {
+    display: none;
+  }
+  
+  .pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 }

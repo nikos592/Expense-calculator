@@ -62,3 +62,32 @@ button {
   margin-top: 0.25rem;
   display: block;
 }
+
+/* Медиа-запросы для адаптивности */
+@media screen and (max-width: 768px) {
+  .expenseForm {
+    padding: 1rem;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  button {
+    grid-column: 1;
+  }
+
+  .expenseForm h2 {
+    grid-column: 1;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .expenseForm {
+    margin: 1rem auto;
+    padding: 1rem;
+  }
+
+  .formGroup input,
+  .formGroup select {
+    padding: 0.5rem;
+  }
+}
