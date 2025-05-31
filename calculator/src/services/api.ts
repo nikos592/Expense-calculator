@@ -7,7 +7,8 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true
+  withCredentials: true,
+  timeout: 10000 // 10 секунд таймаут
 });
 
 // Добавляем токен к каждому запросу
@@ -18,6 +19,26 @@ api.interceptors.request.use((config) => {
   }
   return config;
 });
+
+// Обработка ошибок
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response) {
+      // Сервер ответил с ошибкой
+      console.error('API Error:', error.response.data);
+      return Promise.reject(error.response.data);
+    } else if (error.request) {
+      // Запрос был отправлен, но нет ответа
+      console.error('No response received:', error.request);
+      return Promise.reject(new Error('Сервер не отвечает'));
+    } else {
+      // Ошибка при настройке запроса
+      console.error('Request error:', error.message);
+      return Promise.reject(error);
+    }
+  }
+);
 
 export interface LoginData {
   email: string;

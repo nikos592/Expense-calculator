@@ -9,6 +9,7 @@ interface User {
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
+  isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
   logout: () => void;
@@ -31,22 +32,30 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Проверяем токен при загрузке приложения
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
-    
-    if (token && storedUser) {
+    const checkAuth = async () => {
       try {
-        const userData = JSON.parse(storedUser);
-        setUser(userData);
-        setIsAuthenticated(true);
+        const token = localStorage.getItem('token');
+        const storedUser = localStorage.getItem('user');
+        
+        if (token && storedUser) {
+          const userData = JSON.parse(storedUser);
+          setUser(userData);
+          setIsAuthenticated(true);
+        }
       } catch (error) {
+        console.error('Auth check error:', error);
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+      } finally {
+        setIsLoading(false);
       }
-    }
+    };
+
+    checkAuth();
   }, []);
 
   const handleAuthResponse = (response: AuthResponse) => {
@@ -58,20 +67,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const login = async (email: string, password: string) => {
+    setIsLoading(true);
     try {
       const response = await authApi.login({ email, password });
       handleAuthResponse(response);
     } catch (error) {
-      throw new Error('Неверный email или пароль');
+      console.error('Login error:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const register = async (email: string, password: string) => {
+    setIsLoading(true);
     try {
       const response = await authApi.register({ email, password });
       handleAuthResponse(response);
     } catch (error) {
-      throw new Error('Ошибка при регистрации');
+      console.error('Register error:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -83,7 +100,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, register, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, isLoading, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

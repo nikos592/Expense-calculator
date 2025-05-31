@@ -9,13 +9,14 @@ import {
   Typography,
   Box,
   Link,
+  CircularProgress,
 } from '@mui/material';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { login } = useAuth();
+  const { login, isLoading } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -24,8 +25,8 @@ const LoginPage: React.FC = () => {
     try {
       await login(email, password);
       navigate('/');
-    } catch (err) {
-      setError('Неверный email или пароль');
+    } catch (err: any) {
+      setError(err.message || 'Неверный email или пароль');
     }
   };
 
@@ -64,6 +65,7 @@ const LoginPage: React.FC = () => {
               autoFocus
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              disabled={isLoading}
             />
             <TextField
               margin="normal"
@@ -76,6 +78,7 @@ const LoginPage: React.FC = () => {
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              disabled={isLoading}
             />
             {error && (
               <Typography color="error" sx={{ mt: 2 }}>
@@ -87,11 +90,12 @@ const LoginPage: React.FC = () => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={isLoading}
             >
-              Войти
+              {isLoading ? <CircularProgress size={24} /> : 'Войти'}
             </Button>
             <Box sx={{ textAlign: 'center' }}>
-              <Link href="/register" variant="body2">
+              <Link href="/register" variant="body2" sx={{ pointerEvents: isLoading ? 'none' : 'auto' }}>
                 Нет аккаунта? Зарегистрироваться
               </Link>
             </Box>
