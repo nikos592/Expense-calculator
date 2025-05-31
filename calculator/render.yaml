@@ -29,7 +29,9 @@ services:
         value: 10000
       - key: CLIENT_URL
         value: https://calculator-client-4vmq.onrender.com
-    healthCheckPath: /api/auth/register
+      - key: NODE_ENV
+        value: production
+    healthCheckPath: /health
     autoDeploy: true
     plan: free
     disk:
