@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: calculator-client
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: serve -s build
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://calculator-api-on2h.onrender.com/api
+    healthCheckPath: /
+    autoDeploy: true
+    plan: free
+    disk:
+      name: tmp
+      mountPath: /tmp
+      sizeGB: 1 
