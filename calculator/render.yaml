@@ -13,4 +13,26 @@ services:
     disk:
       name: tmp
       mountPath: /tmp
+      sizeGB: 1
+
+  - type: web
+    name: calculator-api
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: node dist/index.js
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: PORT
+        value: 10000
+      - key: CLIENT_URL
+        value: https://calculator-client-4vmq.onrender.com
+    healthCheckPath: /api/auth/register
+    autoDeploy: true
+    plan: free
+    disk:
+      name: tmp
+      mountPath: /tmp
       sizeGB: 1 
