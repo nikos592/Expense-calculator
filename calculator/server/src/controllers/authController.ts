@@ -14,7 +14,7 @@ export const register = async (req: Request, res: Response) => {
     }
 
     // Проверяем, существует ли пользователь
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       return res.status(400).json({ message: 'Пользователь уже существует' });
     }
@@ -23,16 +23,14 @@ export const register = async (req: Request, res: Response) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Создаем нового пользователя
-    const user = new User({
+    const user = await User.create({
       email,
       password: hashedPassword
     });
 
-    await user.save();
-
     // Создаем JWT токен
     const token = jwt.sign(
-      { userId: user._id },
+      { userId: user.id },
       JWT_SECRET,
       { expiresIn: '24h' }
     );
@@ -40,7 +38,7 @@ export const register = async (req: Request, res: Response) => {
     res.status(201).json({
       token,
       user: {
-        id: user._id,
+        id: user.id,
         email: user.email
       }
     });
@@ -62,7 +60,7 @@ export const login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     // Находим пользователя
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ where: { email } });
     if (!user) {
       return res.status(400).json({ message: 'Пользователь не найден' });
     }
@@ -75,7 +73,7 @@ export const login = async (req: Request, res: Response) => {
 
     // Создаем JWT токен
     const token = jwt.sign(
-      { userId: user._id },
+      { userId: user.id },
       JWT_SECRET,
       { expiresIn: '24h' }
     );
@@ -83,7 +81,7 @@ export const login = async (req: Request, res: Response) => {
     res.json({
       token,
       user: {
-        id: user._id,
+        id: user.id,
         email: user.email
       }
     });
