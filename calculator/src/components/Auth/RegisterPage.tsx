@@ -11,21 +11,28 @@ import {
   Link,
 } from '@mui/material';
 
-const LoginPage: React.FC = () => {
+const RegisterPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-  const { login } = useAuth();
+  const { register } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (password !== confirmPassword) {
+      setError('Пароли не совпадают');
+      return;
+    }
+
     try {
-      await login(email, password);
+      await register(email, password);
       navigate('/');
     } catch (err) {
-      setError('Неверный email или пароль');
+      setError('Ошибка при регистрации');
     }
   };
 
@@ -50,7 +57,7 @@ const LoginPage: React.FC = () => {
           }}
         >
           <Typography component="h1" variant="h5">
-            Вход в систему
+            Регистрация
           </Typography>
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextField
@@ -73,9 +80,20 @@ const LoginPage: React.FC = () => {
               label="Пароль"
               type="password"
               id="password"
-              autoComplete="current-password"
+              autoComplete="new-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="confirmPassword"
+              label="Подтвердите пароль"
+              type="password"
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
             />
             {error && (
               <Typography color="error" sx={{ mt: 2 }}>
@@ -88,11 +106,11 @@ const LoginPage: React.FC = () => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Войти
+              Зарегистрироваться
             </Button>
             <Box sx={{ textAlign: 'center' }}>
-              <Link href="/register" variant="body2">
-                Нет аккаунта? Зарегистрироваться
+              <Link href="/login" variant="body2">
+                Уже есть аккаунт? Войти
               </Link>
             </Box>
           </Box>
@@ -102,4 +120,4 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage; 
+export default RegisterPage; 
